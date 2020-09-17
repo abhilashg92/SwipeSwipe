@@ -9,7 +9,7 @@
 import Foundation
 
 struct Results:Codable {
-    let results:[Result]
+    var results:[Result]
 }
 
 struct Result:Codable {

@@ -17,16 +17,22 @@ class UserProfileViewModel {
     
     private(set) var results:Results?
     weak var delegate:UserProfileDelegate?
-    private(set) var str = ""
+    private var pageNo = 1
+    private var totalPageNo = 50
+
     
     func getProfiles() {
         
-        ResultsService().getResults { (results) in
+        ResultsService().getResults(pages: pageNo) { (results) in
             
             DispatchQueue.main.async {
                 switch results {
                 case .Success(let results):
-                    self.results = results
+                    self.totalPageNo += 50
+                    if self.results == nil {
+                        self.results = results
+                    }
+                    self.results?.results.append(contentsOf: results.results)
                     self.delegate?.dataSuccess()
                     break
                 case .Failure(let reason):
@@ -46,6 +52,22 @@ class UserProfileViewModel {
         CDManager.shared().addToFavourite(profile: profile)
         }
     }
+    
+    
+    func fetchNextPage(completion:@escaping () -> Void) {
+        if totalPageNo >= 500 {
+            return
+        }
+        
+        if pageNo < totalPageNo {
+            pageNo += 10
+            self.getProfiles()
+        } else {
+            completion()
+        }
+    }
+
+
     
     
 }

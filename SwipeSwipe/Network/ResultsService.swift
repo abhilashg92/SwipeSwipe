@@ -16,9 +16,9 @@ enum Response<T> {
 
 class ResultsService {
     
-    func getResults(complition: @escaping ((Response<Results>) -> Void) ) {
-        let url = URL(string: "https://randomuser.me/api/?results=50")!
-        
+    func getResults(pages:Int,complition: @escaping ((Response<Results>) -> Void) ) {
+        let url = URL(string: "https://randomuser.me/api/?results=\(pages)")!
+
         let req = URLRequest(url: url)
         
         let urlTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
